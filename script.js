@@ -2,23 +2,26 @@
 let myLibrary = [];
 const shelf = document.querySelector("#shelf")
 
-function Book(title, author, pages, isRead){
+class Book {
 
+  constructor(title, author, pages, isRead){
     this.title = title
     this.author = author
     this.pages = pages
     this.isRead = isRead
+  }
 
-    this.info = function() {
-        let readMessage = ""
-        if (this.isRead) {
-            readMessage = "already read"
-        } else {
-            readMessage = "not read yet"
-        }
-        return this.title + " by " + this.author + ", " +
-        this.pages + " pages, " + readMessage + "."
+  info() {
+    let readMessage = ""
+    if (this.isRead) {
+      readMessage = "already read"
+    } else {
+      readMessage = "not read yet"
     }
+    return this.title + " by " + this.author + ", " +
+    this.pages + " pages, " + readMessage + "."
+  }
+
 }
 
 function displayLibrary() {
