@@ -1,4 +1,6 @@
+
 let myLibrary = [];
+const shelf = document.querySelector("#shelf")
 
 function Book(title, author, pages, isRead){
 
@@ -19,48 +21,91 @@ function Book(title, author, pages, isRead){
     }
 }
 
-const shelf = document.querySelector("#shelf")
-
-function displayLibrary(library) {
+function displayLibrary() {
 
     let shelfContent = ""
 
-    for (let book of library){
+    for (let i = 0; i < myLibrary.length; i++){
+        let book = myLibrary[i]
 
         let readMessage = ""
         let readColor = ""
         if (book.isRead) {
             readMessage = "Read"
-            readColor = "bg-success"
+            readColor = "bg-info"
         } else {
             readMessage = "Unread"
-            readColor = "bg-danger"
+            readColor = "bg-warning"
         }
 
         let nextCard = `
         <div class="col">
-          <div class="card text-dark bg-light h-100">
-            <div class="card-header"><h2>${book.title}</h2></div>
-            <div class="card-body">
-              <div class="card-text">
-                <p>${book.author}<br>
-                   ${book.pages} pages
-                </p>
-                <h4><span class="badge ${readColor}">${readMessage}</span></h4>
-              </div>
+        <div class="card text-dark bg-light h-100">
+          <div class="card-header d-flex justify-content-between">
+            <h3 class="me-2">${book.title}</h3>
+            <button id="x${i}" class="btn btn-outline-primary" style="height: 2.4em; width: 2.4em;">X</button>
+          </div>
+          <div class="card-body">
+            <div class="card-text d-flex flex-column justify-content-between">
+              <h4 class="d-flex justify-content-between">
+                <span id=r${i} class="badge ${readColor}">${readMessage}</span>
+              </h4>
+              <p>
+                <em>${book.author}</em><br>
+                ${book.pages} pages
+              </p>
             </div>
           </div>
+        </div>
         </div>        
         `
+
         shelfContent += nextCard
+
     }
 
     shelf.innerHTML = shelfContent
+
+    for (let i = 0; i < myLibrary.length; i++) {
+        let thisX = document.getElementById("x" + i)
+        thisX.addEventListener("click", () => removeFromLibrary(thisX.id.substring(1)))
+
+        let thisR = document.getElementById("r" + i)
+        thisR.addEventListener("click", () => toggleRead(thisR.id.substring(1)))
+    }
 }
 
+function addToLibrary() {
+    let title = document.getElementById("title").value
+    let author = document.getElementById("author").value
+    let pages = document.getElementById("pages").value
+    let isRead = document.getElementById("isread").checked
+    
+    let newBook = new Book(title, author, pages, isRead)
+    myLibrary.push(newBook)
+
+    displayLibrary()
+}
+
+function removeFromLibrary(item) {
+    myLibrary.splice(item, 1)
+    displayLibrary()
+}
+
+function toggleRead(item) {
+    myLibrary[item]["isRead"] = !myLibrary[item]["isRead"]
+    displayLibrary()
+}
+
+let adder = document.getElementById("adder")
+adder.addEventListener("click", addToLibrary)
+
 let eragon = new Book("Eragon", "Chris Paulini", 500, true)
-myLibrary.push(eragon)
-let lotr = new Book("Lord of the Rings", "J.R.R. Tolkein", 300, false)
+let lotr = new Book("The Hobbit", "J.R.R. Tolkein", 297, false)
+//myLibrary.push(eragon)
 myLibrary.push(lotr)
 
-displayLibrary(myLibrary)
+displayLibrary()
+
+let text = "Hello world!";
+let result = text.substring(1, 4);
