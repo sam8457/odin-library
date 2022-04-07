@@ -25,14 +25,18 @@ class Book {
 
 class Library {
 
-  libraryArray = []
+  #libraryArray
+
+  constructor () {
+    this.#libraryArray = []
+  }
 
   displayLibrary() {
 
       let shelfContent = ""
 
-      for (let i = 0; i < this.libraryArray.length; i++){
-          let book = this.libraryArray[i]
+      for (let i = 0; i < this.#libraryArray.length; i++){
+          let book = this.#libraryArray[i]
 
           let readMessage = ""
           let readColor = ""
@@ -72,12 +76,12 @@ class Library {
 
       shelf.innerHTML = shelfContent
 
-      for (let i = 0; i < this.libraryArray.length; i++) {
+      for (let i = 0; i < this.#libraryArray.length; i++) {
           let thisX = document.getElementById("x" + i)
-          thisX.addEventListener("click", () => removeFromLibrary(thisX.id.substring(1)))
+          thisX.addEventListener("click", () => this.removeFromLibrary(thisX.id.substring(1)))
 
           let thisR = document.getElementById("r" + i)
-          thisR.addEventListener("click", () => toggleRead(thisR.id.substring(1)))
+          thisR.addEventListener("click", () => this.toggleRead(thisR.id.substring(1)))
       }
   }
 
@@ -86,23 +90,23 @@ class Library {
       let author = document.getElementById("author").value
       let pages = document.getElementById("pages").value
       let isRead = document.getElementById("isread").checked
-      
-      let newBook = new Book(title, author, pages, isRead)
-      this.libraryArray.push(newBook)
 
-      displayLibrary()
+      let newBook = new Book(title, author, pages, isRead)
+      this.#libraryArray.push(newBook)
+
+      this.displayLibrary()
   }
 
   removeFromLibrary(item) {
-      this.libraryArray.splice(item, 1)
-      displayLibrary()
+      this.#libraryArray.splice(item, 1)
+      this.displayLibrary()
   }
 
   toggleRead(item) {
-      this.libraryArray[item]["isRead"] = !this.libraryArray[item]["isRead"]
-      displayLibrary()
+      this.#libraryArray[item]["isRead"] = !this.#libraryArray[item]["isRead"]
+      this.displayLibrary()
   }
-  
+
 }
 
 
@@ -111,17 +115,13 @@ class Library {
 const shelf = document.querySelector("#shelf")
 
 let myLibrary = new Library()
-console.log(myLibrary)
 
 let adder = document.getElementById("adder")
-adder.addEventListener("click", myLibrary.addToLibrary)
 
-let eragon = new Book("Eragon", "Chris Paulini", 500, true)
-let lotr = new Book("The Hobbit", "J.R.R. Tolkein", 297, false)
-//this.libraryArray.push(eragon)
-myLibrary.libraryArray.push(lotr)
+// There has to be an anonymous function here, otherwise 'this' will
+// refer to the button that the event listener is on.
+adder.addEventListener("click", function() {myLibrary.addToLibrary()})
+// https://stackoverflow.com/questions/1081499/accessing-an-objects-property-from-an-event-listener-call-in-javascript
+// https://stackoverflow.com/questions/38636359/how-to-pass-a-variable-to-event-listener-function
 
 myLibrary.displayLibrary()
-
-let text = "Hello world!";
-let result = text.substring(1, 4);
